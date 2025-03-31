@@ -1,0 +1,161 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > RefreshTokenService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">de.msg.training.donationmanager.service</a>
+</div>
+
+<h1>Coverage Summary for Class: RefreshTokenService (de.msg.training.donationmanager.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RefreshTokenService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (1/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    6.7%
+  </span>
+  <span class="absValue">
+    (1/15)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package de.msg.training.donationmanager.service;
+&nbsp;
+&nbsp;
+&nbsp;import de.msg.training.donationmanager.config.JwtUtils;
+&nbsp;import de.msg.training.donationmanager.exception.BusinessException;
+&nbsp;import de.msg.training.donationmanager.exception.BusinessExceptionCode;
+&nbsp;import de.msg.training.donationmanager.model.RefreshToken;
+&nbsp;import de.msg.training.donationmanager.repository.RefreshTokenRepository;
+&nbsp;import de.msg.training.donationmanager.repository.UserRepository;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.time.Instant;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;public class RefreshTokenService {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private RefreshTokenRepository refreshTokenRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private UserRepository userRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private JwtUtils jwtUtils;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private UserDetailsServiceImpl userDetailsService;
+&nbsp;
+&nbsp;    public void deleteRefreshTokenForUser(Long userId) {
+<b class="nc">&nbsp;        refreshTokenRepository.deleteRefreshTokenFromUser(userId);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void createRefreshToken(String uuid, Long userId) {
+<b class="nc">&nbsp;        RefreshToken rt = new RefreshToken();</b>
+<b class="nc">&nbsp;        rt.setRefreshToken(uuid);</b>
+<b class="nc">&nbsp;        rt.setExpiryDate(Instant.now().plusSeconds(84000));</b>
+<b class="nc">&nbsp;        rt.setUser(userRepository.findById(userId).get());</b>
+<b class="nc">&nbsp;        refreshTokenRepository.save(rt);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public String exchangeRefreshToken(String refreshToken) throws BusinessException {
+<b class="nc">&nbsp;        Optional&lt;RefreshToken&gt; refreshTokenOptional = refreshTokenRepository.findById(refreshToken);</b>
+<b class="nc">&nbsp;        if(!refreshTokenOptional.isPresent()) {</b>
+<b class="nc">&nbsp;            throw new RuntimeException(&quot;Refresh token is not valid&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        RefreshToken rt = refreshTokenOptional.get();</b>
+<b class="nc">&nbsp;        if(rt.getExpiryDate().isBefore(Instant.now())) {</b>
+<b class="nc">&nbsp;            refreshTokenRepository.delete(rt);</b>
+<b class="nc">&nbsp;            throw new BusinessException(BusinessExceptionCode.EXPIRED_REFRESHTOKEN);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return jwtUtils.generateJwtToken(userDetailsService.loadUserByUsername(rt.getUser().getUsername()));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-08-18 14:50</div>
+</div>
+</body>
+</html>

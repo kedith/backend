@@ -1,0 +1,160 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > DonationService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">de.msg.training.donationmanager.service</a>
+</div>
+
+<h1>Coverage Summary for Class: DonationService (de.msg.training.donationmanager.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DonationService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    16.7%
+  </span>
+  <span class="absValue">
+    (1/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    17.6%
+  </span>
+  <span class="absValue">
+    (3/17)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package de.msg.training.donationmanager.service;
+&nbsp;
+&nbsp;import de.msg.training.donationmanager.exception.BusinessException;
+&nbsp;import de.msg.training.donationmanager.exception.BusinessExceptionCode;
+&nbsp;import de.msg.training.donationmanager.model.Donation;
+&nbsp;import de.msg.training.donationmanager.model.dtos.DonationDto;
+&nbsp;import de.msg.training.donationmanager.model.mapper.DonationMapper;
+&nbsp;import de.msg.training.donationmanager.repository.DonationRepository;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Service
+&nbsp;public class DonationService {
+&nbsp;
+&nbsp;    private final DonationRepository donationRepository;
+&nbsp;    private final DonationMapper donationMapper;
+&nbsp;
+&nbsp;    @Autowired
+<b class="fc">&nbsp;    public DonationService(DonationRepository donationRepository, DonationMapper donationMapper) {</b>
+<b class="fc">&nbsp;        this.donationRepository = donationRepository;</b>
+<b class="fc">&nbsp;        this.donationMapper = donationMapper;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;DonationDto&gt; findAll() {
+<b class="nc">&nbsp;        return donationMapper.dtosFromDonations(donationRepository.findAll());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public DonationDto createDonation(DonationDto donationDto) {
+<b class="nc">&nbsp;        Donation donation = donationMapper.donationFromDonationDto(donationDto);</b>
+<b class="nc">&nbsp;        Donation savedDonation = donationRepository.save(donation);</b>
+<b class="nc">&nbsp;        return donationMapper.donationDtoFromDonation(savedDonation);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public DonationDto getDonationById(Long id) {
+<b class="nc">&nbsp;        return donationRepository.findById(id)</b>
+<b class="nc">&nbsp;                .map(donationMapper::donationDtoFromDonation)</b>
+<b class="nc">&nbsp;                .orElse(null);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void updateDonation(DonationDto updatedDonationDto, Long id) throws BusinessException {
+<b class="nc">&nbsp;        Donation existingDonation = donationRepository.findById(id)</b>
+<b class="nc">&nbsp;                .orElseThrow(() -&gt; new BusinessException(BusinessExceptionCode.DONATION_NOT_FOUND));</b>
+&nbsp;
+<b class="nc">&nbsp;        donationMapper.updateDonationFromDto(updatedDonationDto, existingDonation);</b>
+<b class="nc">&nbsp;        donationRepository.save(existingDonation);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void deleteDonation(Long id) throws BusinessException {
+<b class="nc">&nbsp;        if (!donationRepository.existsById(id)) {</b>
+<b class="nc">&nbsp;            throw new BusinessException(BusinessExceptionCode.DONATION_NOT_FOUND);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        donationRepository.deleteById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-08-18 14:50</div>
+</div>
+</body>
+</html>

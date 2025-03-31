@@ -1,0 +1,222 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > UserDetailsImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">de.msg.training.donationmanager.service</a>
+</div>
+
+<h1>Coverage Summary for Class: UserDetailsImpl (de.msg.training.donationmanager.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserDetailsImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/35)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package de.msg.training.donationmanager.service;
+&nbsp;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.annotation.JsonIgnore;
+&nbsp;import de.msg.training.donationmanager.model.User;
+&nbsp;import org.springframework.security.core.GrantedAuthority;
+&nbsp;import org.springframework.security.core.authority.SimpleGrantedAuthority;
+&nbsp;import org.springframework.security.core.userdetails.UserDetails;
+&nbsp;
+&nbsp;import java.util.Collection;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Objects;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;public class UserDetailsImpl implements UserDetails {
+&nbsp;	private static final long serialVersionUID = 1L;
+&nbsp;
+&nbsp;	private Long id;
+&nbsp;
+&nbsp;	private String username;
+&nbsp;
+&nbsp;	private String email;
+&nbsp;
+&nbsp;	@JsonIgnore
+&nbsp;	private String password;
+&nbsp;
+&nbsp;	private boolean firstLogin;
+&nbsp;
+&nbsp;	private boolean active;
+&nbsp;
+&nbsp;	private Collection&lt;? extends GrantedAuthority&gt; authorities;
+&nbsp;
+&nbsp;	public UserDetailsImpl(Long id, String username, String email, String password,
+<b class="nc">&nbsp;						   Collection&lt;? extends GrantedAuthority&gt; authorities, boolean firstLogin, boolean active) {</b>
+<b class="nc">&nbsp;		this.id = id;</b>
+<b class="nc">&nbsp;		this.username = username;</b>
+<b class="nc">&nbsp;		this.email = email;</b>
+<b class="nc">&nbsp;		this.password = password;</b>
+<b class="nc">&nbsp;		this.authorities = authorities;</b>
+<b class="nc">&nbsp;		this.firstLogin = firstLogin;</b>
+<b class="nc">&nbsp;		this.active = active;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public static UserDetailsImpl build(User user) {
+<b class="nc">&nbsp;		List&lt;GrantedAuthority&gt; authorities = user.getRoles().stream()</b>
+<b class="nc">&nbsp;				.map(role -&gt; new SimpleGrantedAuthority(role.getName().name()))</b>
+<b class="nc">&nbsp;				.collect(Collectors.toList());</b>
+&nbsp;
+<b class="nc">&nbsp;		return new UserDetailsImpl(</b>
+<b class="nc">&nbsp;				user.getId(),</b>
+<b class="nc">&nbsp;				user.getUsername(),</b>
+<b class="nc">&nbsp;				user.getEmail(),</b>
+<b class="nc">&nbsp;				user.getPassword(),</b>
+&nbsp;				authorities,
+<b class="nc">&nbsp;				user.isFirstLogin(),</b>
+<b class="nc">&nbsp;				user.isActive());</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
+<b class="nc">&nbsp;		return authorities;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Long getId() {
+<b class="nc">&nbsp;		return id;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public String getEmail() {
+<b class="nc">&nbsp;		return email;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String getPassword() {
+<b class="nc">&nbsp;		return password;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String getUsername() {
+<b class="nc">&nbsp;		return username;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isAccountNonExpired() {
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isAccountNonLocked() {
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isCredentialsNonExpired() {
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean isEnabled() {
+<b class="nc">&nbsp;		return true;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public boolean equals(Object o) {
+<b class="nc">&nbsp;		if (this == o)</b>
+<b class="nc">&nbsp;			return true;</b>
+<b class="nc">&nbsp;		if (o == null || getClass() != o.getClass())</b>
+<b class="nc">&nbsp;			return false;</b>
+<b class="nc">&nbsp;		UserDetailsImpl user = (UserDetailsImpl) o;</b>
+<b class="nc">&nbsp;		return Objects.equals(id, user.id);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean isFirstLogin() {
+<b class="nc">&nbsp;		return firstLogin;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public boolean isActive() {
+<b class="nc">&nbsp;		return active;</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-08-18 14:50</div>
+</div>
+</body>
+</html>
